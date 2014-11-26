@@ -3,9 +3,9 @@
   <title><![CDATA[Superfish's blog]]></title>
   <subtitle><![CDATA[technical sharing]]></subtitle>
   <link href="/atom.xml" rel="self"/>
-  <link href="http://yoursite.com/"/>
-  <updated>2014-11-26T07:54:01.113Z</updated>
-  <id>http://yoursite.com/</id>
+  <link href="http://wangjunyan.github.io/"/>
+  <updated>2014-11-26T08:02:35.268Z</updated>
+  <id>http://wangjunyan.github.io/</id>
   
   <author>
     <name><![CDATA[superfish]]></name>
@@ -16,8 +16,8 @@
   
   <entry>
     <title><![CDATA[测试]]></title>
-    <link href="http://yoursite.com/2014/11/25/test-post/"/>
-    <id>http://yoursite.com/2014/11/25/test-post/</id>
+    <link href="http://wangjunyan.github.io/2014/11/25/test-post/"/>
+    <id>http://wangjunyan.github.io/2014/11/25/test-post/</id>
     <published>2014-11-25T08:02:05.000Z</published>
     <updated>2014-11-26T07:25:21.000Z</updated>
     <content type="html"><![CDATA[]]></content>
@@ -25,14 +25,14 @@
     <![CDATA[]]>
     </summary>
     
-      <category term="android linux" scheme="http://yoursite.com/tags/android-linux/"/>
+      <category term="android linux" scheme="http://wangjunyan.github.io/tags/android-linux/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Hello World]]></title>
-    <link href="http://yoursite.com/2014/11/25/hello-world/"/>
-    <id>http://yoursite.com/2014/11/25/hello-world/</id>
+    <link href="http://wangjunyan.github.io/2014/11/25/hello-world/"/>
+    <id>http://wangjunyan.github.io/2014/11/25/hello-world/</id>
     <published>2014-11-25T06:58:50.000Z</published>
     <updated>2014-11-25T06:58:50.000Z</updated>
     <content type="html"><![CDATA[<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">trobuleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
