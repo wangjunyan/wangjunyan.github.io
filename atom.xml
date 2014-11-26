@@ -4,7 +4,7 @@
   <subtitle><![CDATA[technical sharing]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://wangjunyan.github.io/"/>
-  <updated>2014-11-26T08:02:35.268Z</updated>
+  <updated>2014-11-26T09:36:33.971Z</updated>
   <id>http://wangjunyan.github.io/</id>
   
   <author>
@@ -15,48 +15,35 @@
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[测试]]></title>
-    <link href="http://wangjunyan.github.io/2014/11/25/test-post/"/>
-    <id>http://wangjunyan.github.io/2014/11/25/test-post/</id>
-    <published>2014-11-25T08:02:05.000Z</published>
-    <updated>2014-11-26T07:25:21.000Z</updated>
-    <content type="html"><![CDATA[]]></content>
-    <summary type="html">
-    <![CDATA[]]>
-    </summary>
-    
-      <category term="android linux" scheme="http://wangjunyan.github.io/tags/android-linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Hello World]]></title>
-    <link href="http://wangjunyan.github.io/2014/11/25/hello-world/"/>
-    <id>http://wangjunyan.github.io/2014/11/25/hello-world/</id>
-    <published>2014-11-25T06:58:50.000Z</published>
-    <updated>2014-11-25T06:58:50.000Z</updated>
-    <content type="html"><![CDATA[<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">trobuleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2>
-<h3 id="Create_a_new_post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+    <title><![CDATA[如何查看Android memory dump文件中的bitmap]]></title>
+    <link href="http://wangjunyan.github.io/2014/11/26/export-bitmap-in-heap-dump-file/"/>
+    <id>http://wangjunyan.github.io/2014/11/26/export-bitmap-in-heap-dump-file/</id>
+    <published>2014-11-26T08:23:13.000Z</published>
+    <updated>2014-11-26T08:23:13.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="1">1</h2>
+<h3 id="1-1">1.1</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">echo</span></div></pre></td></tr></table></figure>
 
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+<p> bash</p>
+<h3 id="1-2">1.2</h3>
+<h2 id="2">2</h2>
+<h2 id="3">3</h2>
+<p>参考</p>
+<p><a href="http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-view-bitmaps-from-memory-dump" target="_blank" rel="external">http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-view-bitmaps-from-memory-dump</a></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io]]>
+    <![CDATA[<h2 id="1">1</h2>
+<h3 id="1-1">1.1</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></t]]>
     </summary>
+    
+      <category term="Android" scheme="http://wangjunyan.github.io/tags/Android/"/>
+    
+      <category term="memory" scheme="http://wangjunyan.github.io/tags/memory/"/>
+    
+      <category term="bitmap" scheme="http://wangjunyan.github.io/tags/bitmap/"/>
+    
+      <category term="Android" scheme="http://wangjunyan.github.io/categories/Android/"/>
     
   </entry>
   
