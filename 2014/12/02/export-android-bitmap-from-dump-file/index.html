@@ -1,26 +1,82 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <title><![CDATA[Superfish's blog]]></title>
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
   
-  <link href="/atom.xml" rel="self"/>
-  <link href="http://wangjunyan.github.io/"/>
-  <updated>2014-12-02T10:35:34.707Z</updated>
-  <id>http://wangjunyan.github.io/</id>
+    <title>批量导出dump文件中的Bitmap | Superfish&#39;s blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="superfish">
+    
+    <meta name="description" content="上一篇文章提到了查看memory dump文件中的Bitmap对象相应的图像，进一步我们可以批量的将dump文件中所有的Bitmap对象转化为png格式的图像文件。MAT不仅提供了一组Eclipse extension points，还提供了从dump文件读取数据的API。利用MAT提供的API，我">
+    
+    
+    
+    
+    <link rel="alternative" href="/atom.xml" title="Superfish&#39;s blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.png">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      			<div id="textlogo">
+				<h1 class="site-name"><a rel="hover" class="hover" href="/" title="Superfish&#39;s blog">Superfish&#39;s blog</a></h1>
+			</div>
+			<div class="navbar"><a rel="buzz" class="buzz" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a rel="wobble-top" class="wobble-top" href="/">Home</a></li>
+					
+						<li><a rel="wobble-top" class="wobble-top" href="/archives">Archives</a></li>
+					
+						<li><a rel="wobble-top" class="wobble-top" href="/about">About</a></li>
+					
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
   
-  <author>
-    <name><![CDATA[superfish]]></name>
-    <email><![CDATA[wangjunyan1984@gmail.com]]></email>
-  </author>
-  
-  <generator uri="http://zespia.tw/hexo/">Hexo</generator>
-  
-  <entry>
-    <title><![CDATA[批量导出dump文件中的Bitmap]]></title>
-    <link href="http://wangjunyan.github.io/2014/12/02/export-android-bitmap-from-dump-file/"/>
-    <id>http://wangjunyan.github.io/2014/12/02/export-android-bitmap-from-dump-file/</id>
-    <published>2014-12-02T10:32:42.000Z</published>
-    <updated>2014-12-02T10:32:42.000Z</updated>
-    <content type="html"><![CDATA[<p><a href="/2014/12/02/two-tips-of-eclipse-memory-analyzer/">上一篇文章</a>提到了查看memory dump文件中的Bitmap对象相应的图像，进一步我们可以批量的将dump文件中所有的Bitmap对象转化为png格式的图像文件。MAT不仅提供了一组Eclipse extension points，还提供了从dump文件读取数据的API。利用MAT提供的API，我们可以写一个Java程序批量导出dump文件中所有的Bitmap。</p>
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/12/02/export-android-bitmap-from-dump-file/" title="批量导出dump文件中的Bitmap" itemprop="url">批量导出dump文件中的Bitmap</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="http://wangjunyan.github.io/about" title="superfish" target="_blank" itemprop="author">superfish</a>
+		
+  <p class="article-time">
+    <time datetime="2014-12-02T10:32:42.000Z" itemprop="datePublished"> Published Dec 2 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MAT扩展API接口"><span class="toc-number">1.</span> <span class="toc-text">MAT扩展API接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#android_bitmap导出工具实现"><span class="toc-number">2.</span> <span class="toc-text">android bitmap导出工具实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
+		
+		</div>
+		
+		<p><a href="/2014/12/02/two-tips-of-eclipse-memory-analyzer/">上一篇文章</a>提到了查看memory dump文件中的Bitmap对象相应的图像，进一步我们可以批量的将dump文件中所有的Bitmap对象转化为png格式的图像文件。MAT不仅提供了一组Eclipse extension points，还提供了从dump文件读取数据的API。利用MAT提供的API，我们可以写一个Java程序批量导出dump文件中所有的Bitmap。</p>
 <h2 id="MAT扩展API接口">MAT扩展API接口</h2>
 <p>利用ISnapshot接口可以从heap dump中解析数据，ISnapshot代表了整个heap dump，提供了各种方法从中读取object和class，获取objects的大小等。我们可以通过SnapshotFactory获取ISnapshot实例。IObject接口代表一个Java对象，IClass，IInstance和IArray都继承了IObject。IClass代表class对象，可通过getObjectIds()方法获得该class的所有实例ID。IInstance代表非array对象，可通过resloveValue()方法获得成员变量的值。IArray代表array对象，分为IPrimitiveArray和IObjectArray，可分别通过getValueArray()方法获得primitive array值或getReferenceArray()方法获得address array。</p>
 <p>上述层次对象模型很直观并容易理解，但由于heap dump文件中有时会有非常多的对象，MAT不在ISnapshot实例中保存整个层次模型，而是为每个对象分配一个ID，并利用ID为索引从ISnapshot接口获得对象的具体信息，如class，size，referenced objects等。大都需要遍历对象的计算量大的工作都是通过对象ID而不是层次模型来实现，比如计算retained size，path to GC root等。只有当需要获得一个object的所有信息时，比如成员变量名称和变量值，才需要利用层次对象模型里的各种类。我们可以通过mapIdToAddress()和mapAddressToId()方式实现对象的ID和地址的互相转换。</p>
@@ -53,59 +109,309 @@
 
 <h2 id="参考">参考</h2>
 <p><a href="http://www.slideshare.net/AJohnson1/extending-eclipse-memory-analyzer" target="_blank" rel="external">http://www.slideshare.net/AJohnson1/extending-eclipse-memory-analyzer</a><br><a href="https://wiki.eclipse.org/MemoryAnalyzer/Reading_Data_from_Heap_Dumps" target="_blank" rel="external">https://wiki.eclipse.org/MemoryAnalyzer/Reading_Data_from_Heap_Dumps</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p><a href="/2014/12/02/two-tips-of-eclipse-memory-analyzer/">上一篇文章</a>提到了查看memory dump文件中的Bitmap对象相应的图像，进一步我们可以批量的将dump文件中所有的Bitmap对象转化为png]]>
-    </summary>
-    
-      <category term="Android" scheme="http://wangjunyan.github.io/tags/Android/"/>
-    
-      <category term="memory" scheme="http://wangjunyan.github.io/tags/memory/"/>
-    
-      <category term="bitmap" scheme="http://wangjunyan.github.io/tags/bitmap/"/>
-    
-      <category term="Android" scheme="http://wangjunyan.github.io/categories/Android/"/>
-    
-  </entry>
   
-  <entry>
-    <title><![CDATA[MAT分析Android内存dump文件的两个tips]]></title>
-    <link href="http://wangjunyan.github.io/2014/12/02/two-tips-of-eclipse-memory-analyzer/"/>
-    <id>http://wangjunyan.github.io/2014/12/02/two-tips-of-eclipse-memory-analyzer/</id>
-    <published>2014-12-02T10:11:46.000Z</published>
-    <updated>2014-12-02T10:11:46.000Z</updated>
-    <content type="html"><![CDATA[<h2 id="查看Android_memory_dump文件中的Bitmap">查看Android memory dump文件中的Bitmap</h2>
-<p>在Android应用开发时一般使用Eclipse Memory Analyzer(MAT)分析堆内存占用情况，而Bitmap一般是占用内存最大的对象，所以有时我们希望知道MAT工具中显示的Bitmap对象对应哪个图像（本地资源文件或网络下载）。</p>
-<p>在MAT中选定要查看的Bitmap，如下图所示，在Inspector窗口查看Bitmap对象的Attributes，其中mBuffer为Bitmap像素数据，mHeight和mWidth为Bitmap的高度和宽度。右键mBuffer并在弹出的菜单中选择”Copy”-&gt;”Save Value To File”，将这个array的值保存到文件中，并用.data作为扩展名。<br><img src="/img/mat_bitmap.png" alt="MAT中的Bitmap"></p>
-<p>对于Linux用户，可以使用GIMP或ImageMagick工具将原始数据转换成png格式图像。方法如下：</p>
-<ul>
-<li>使用GIMP软件：打开GIMP，”File”-&gt;”Open”，选择刚才保存的.data文件，弹出”Load Image from Raw Data”对话框，设置合适的参数，设置”Image type”为“RGB Alpha”（大部分android resource是这种image type，若有其它格式，还要尝试其它的类型），设置width和height为mWidth和mHeight的值。这样GIMP界面就会显示出图片了。</li>
-<li>使用ImageMagick工具：将导出的.data文件扩展名改为.rgba</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ convert -size <span class="string">'width'</span>x<span class="string">'height'</span> -depth <span class="number">8</span> filename.rgba filename.png</div></pre></td></tr></table></figure>
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
 
-<p>对于Windows或MAC用户，可以使用Photoshop将原始数据转换成png格式图像。方法如下：</p>
-<ul>
-<li>将导出的.data文件扩展名改为.raw。“文件”-&gt;“打开”，选择文件格式“Camera Raw”，设置宽度和高度，将通道数设为4。这样Photoshop界面就会显示出图片了。</li>
-</ul>
-<h2 id="查看dump文件中unreachable的对象">查看dump文件中unreachable的对象</h2>
-<p>一个Java对象没有引用后，该对象占的堆内存不是立即被回收的，回收的时机是JAVA虚拟机的GC算法来决定的，所以memory dump时产成的文件中会包含unreachable的对象。一般来说，如果MAT工具中看到的live对象的总大小比dump文件大小小很多，我们有必要查看一下哪些unreachable的对象占用了内存。MAT默认情况下在分析dump文件时会将unreachable的对象剔除，可以通过打开如下设置让MAT分析dump文件时保留unreachable对象：”Window”-&gt;”Preference”-&gt;”General configration for memory analyzer”-&gt;”keep unreachable objects”。</p>
-<h2 id="参考">参考</h2>
-<p><a href="http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-view-bitmaps-from-memory-dump" target="_blank" rel="external">http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-view-bitmaps-from-memory-dump</a><br><a href="https://wiki.eclipse.org/MemoryAnalyzer/FAQ#How_to_analyse_unreachable_objects" target="_blank" rel="external">https://wiki.eclipse.org/MemoryAnalyzer/FAQ#How_to_analyse_unreachable_objects</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="查看Android_memory_dump文件中的Bitmap">查看Android memory dump文件中的Bitmap</h2>
-<p>在Android应用开发时一般使用Eclipse Memory Analyzer(MAT)分析堆内存占用情况，而Bit]]>
-    </summary>
-    
-      <category term="Android" scheme="http://wangjunyan.github.io/tags/Android/"/>
-    
-      <category term="memory" scheme="http://wangjunyan.github.io/tags/memory/"/>
-    
-      <category term="bitmap" scheme="http://wangjunyan.github.io/tags/bitmap/"/>
-    
-      <category term="Android" scheme="http://wangjunyan.github.io/categories/Android/"/>
-    
-  </entry>
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android/">Android</a>
+</div>
+
+
+  <div class="article-tags">
   
-</feed>
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/memory/">memory</a><a href="/tags/bitmap/">bitmap</a>
+  </div>
+
+</div>
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://wangjunyan.github.io/2014/12/02/export-android-bitmap-from-dump-file/" data-title="批量导出dump文件中的Bitmap | Superfish&#39;s blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2014/12/02/two-tips-of-eclipse-memory-analyzer/"  title="MAT分析Android内存dump文件的两个tips">
+ <strong>下一篇：</strong><br/> 
+ <span>MAT分析Android内存dump文件的两个tips
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MAT扩展API接口"><span class="toc-number">1.</span> <span class="toc-text">MAT扩展API接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#android_bitmap导出工具实现"><span class="toc-number">2.</span> <span class="toc-text">android bitmap导出工具实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+			<li><a href="/categories/Android/" title="Android">Android<sup>2</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/bitmap/" title="bitmap">bitmap<sup>2</sup></a></li>
+		
+			<li><a href="/tags/memory/" title="memory">memory<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>2</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            <a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div class="alignleft">
+  
+  &copy; 2014 superfish
+  
+</div>
+<div class="clearfix"></div></footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wangjunyan"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-57125053-1', 'auto');  
+ga('send', 'pageview');
+</script>
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F38623dba696d817ae2013b4e2316a881' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+  </body>
+</html>

@@ -1,24 +1,16 @@
 
  <!DOCTYPE HTML>
-<html lang="zh-CN">
+<html >
 <head>
   <meta charset="UTF-8">
   
-    <title>如何查看Android memory dump文件中的bitmap | Superfish&#39;s blog</title>
+    <title>MAT分析Android内存dump文件的两个tips | Superfish&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="superfish">
     
-    <meta name="description" content="1
-1.1
-1$ echo
-
- bash
-1.2
-2
-3
-参考
-http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-view-bitmaps-from-memory-dump">
+    <meta name="description" content="查看Android memory dump文件中的Bitmap
+在Android应用开发时一般使用Eclipse Memory Analyzer(MAT)分析堆内存占用情况，而Bitmap一般是占用内存最大的对象，所以有时我们希望知道MAT工具中显示的Bitmap对象对应哪个图像（本地资源文件或网络">
     
     
     
@@ -26,11 +18,11 @@ http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-v
     <link rel="alternative" href="/atom.xml" title="Superfish&#39;s blog" type="application/atom+xml">
     
     
-    <link rel="icon" href="/img/favicon.ico">
+    <link rel="icon" href="/img/favicon.png">
     
     
-    <link rel="apple-touch-icon" href="/img/jacman.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon" href="/img/logo.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.png">
     
     <link rel="stylesheet" href="/css/style.css" type="text/css">
 
@@ -38,39 +30,25 @@ http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-v
 
   <body>
     <header>
-      <div>
-		
-			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="Superfish&#39;s blog" title="Superfish&#39;s blog"/></a>
+      			<div id="textlogo">
+				<h1 class="site-name"><a rel="hover" class="hover" href="/" title="Superfish&#39;s blog">Superfish&#39;s blog</a></h1>
 			</div>
-			
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Superfish&#39;s blog">Superfish&#39;s blog</a></h1>
-				<h2 class="blog-motto">technical sharing</h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a rel="buzz" class="buzz" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
 					<ul>
 					 
-						<li><a href="/">Home</a></li>
+						<li><a rel="wobble-top" class="wobble-top" href="/">Home</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a rel="wobble-top" class="wobble-top" href="/archives">Archives</a></li>
 					
-						<li><a href="/about">About</a></li>
+						<li><a rel="wobble-top" class="wobble-top" href="/about">About</a></li>
 					
-					<li>
- 					
-					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
-						<label>Search</label>
-						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
-					</form>
-					
-					</li>
 				</ul>
 			</nav>			
 </div>
+
     </header>
     <div id="container">
       <div id="main" class="post" itemscope itemprop="blogPost">
@@ -79,36 +57,44 @@ http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-v
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/11/26/export-bitmap-in-heap-dump-file/" title="如何查看Android memory dump文件中的bitmap" itemprop="url">如何查看Android memory dump文件中的bitmap</a>
+      <a href="/2014/12/02/two-tips-of-eclipse-memory-analyzer/" title="MAT分析Android内存dump文件的两个tips" itemprop="url">MAT分析Android内存dump文件的两个tips</a>
   </h1>
   <p class="article-author">By
        
 		<a href="http://wangjunyan.github.io/about" title="superfish" target="_blank" itemprop="author">superfish</a>
 		
   <p class="article-time">
-    <time datetime="2014-11-26T08:23:13.000Z" itemprop="datePublished"> 发表于 11月 26 2014</time>
+    <time datetime="2014-12-02T10:11:46.000Z" itemprop="datePublished"> Published Dec 2 2014</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1"><span class="toc-number">1.</span> <span class="toc-text">1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1"><span class="toc-number">1.1.</span> <span class="toc-text">1.1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2"><span class="toc-number">1.2.</span> <span class="toc-text">1.2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2"><span class="toc-number">2.</span> <span class="toc-text">2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3"><span class="toc-number">3.</span> <span class="toc-text">3</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#查看Android_memory_dump文件中的Bitmap"><span class="toc-number">1.</span> <span class="toc-text">查看Android memory dump文件中的Bitmap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看dump文件中unreachable的对象"><span class="toc-number">2.</span> <span class="toc-text">查看dump文件中unreachable的对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="1">1</h2>
-<h3 id="1-1">1.1</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">echo</span></div></pre></td></tr></table></figure>
+		<h2 id="查看Android_memory_dump文件中的Bitmap">查看Android memory dump文件中的Bitmap</h2>
+<p>在Android应用开发时一般使用Eclipse Memory Analyzer(MAT)分析堆内存占用情况，而Bitmap一般是占用内存最大的对象，所以有时我们希望知道MAT工具中显示的Bitmap对象对应哪个图像（本地资源文件或网络下载）。</p>
+<p>在MAT中选定要查看的Bitmap，如下图所示，在Inspector窗口查看Bitmap对象的Attributes，其中mBuffer为Bitmap像素数据，mHeight和mWidth为Bitmap的高度和宽度。右键mBuffer并在弹出的菜单中选择”Copy”-&gt;”Save Value To File”，将这个array的值保存到文件中，并用.data作为扩展名。<br><img src="/img/mat_bitmap.png" alt="MAT中的Bitmap"></p>
+<p>对于Linux用户，可以使用GIMP或ImageMagick工具将原始数据转换成png格式图像。方法如下：</p>
+<ul>
+<li>使用GIMP软件：打开GIMP，”File”-&gt;”Open”，选择刚才保存的.data文件，弹出”Load Image from Raw Data”对话框，设置合适的参数，设置”Image type”为“RGB Alpha”（大部分android resource是这种image type，若有其它格式，还要尝试其它的类型），设置width和height为mWidth和mHeight的值。这样GIMP界面就会显示出图片了。</li>
+<li>使用ImageMagick工具：将导出的.data文件扩展名改为.rgba</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ convert -size <span class="string">'width'</span>x<span class="string">'height'</span> -depth <span class="number">8</span> filename.rgba filename.png</div></pre></td></tr></table></figure>
 
-<p> bash</p>
-<h3 id="1-2">1.2</h3>
-<h2 id="2">2</h2>
-<h2 id="3">3</h2>
-<p>参考</p>
-<p><a href="http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-view-bitmaps-from-memory-dump" target="_blank" rel="external">http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-view-bitmaps-from-memory-dump</a></p>
+<p>对于Windows或MAC用户，可以使用Photoshop将原始数据转换成png格式图像。方法如下：</p>
+<ul>
+<li>将导出的.data文件扩展名改为.raw。“文件”-&gt;“打开”，选择文件格式“Camera Raw”，设置宽度和高度，将通道数设为4。这样Photoshop界面就会显示出图片了。</li>
+</ul>
+<h2 id="查看dump文件中unreachable的对象">查看dump文件中unreachable的对象</h2>
+<p>一个Java对象没有引用后，该对象占的堆内存不是立即被回收的，回收的时机是JAVA虚拟机的GC算法来决定的，所以memory dump时产成的文件中会包含unreachable的对象。一般来说，如果MAT工具中看到的live对象的总大小比dump文件大小小很多，我们有必要查看一下哪些unreachable的对象占用了内存。MAT默认情况下在分析dump文件时会将unreachable的对象剔除，可以通过打开如下设置让MAT分析dump文件时保留unreachable对象：”Window”-&gt;”Preference”-&gt;”General configration for memory analyzer”-&gt;”keep unreachable objects”。</p>
+<h2 id="参考">参考</h2>
+<p><a href="http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-view-bitmaps-from-memory-dump" target="_blank" rel="external">http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-view-bitmaps-from-memory-dump</a><br><a href="https://wiki.eclipse.org/MemoryAnalyzer/FAQ#How_to_analyse_unreachable_objects" target="_blank" rel="external">https://wiki.eclipse.org/MemoryAnalyzer/FAQ#How_to_analyse_unreachable_objects</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -130,13 +116,26 @@ http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-v
 
 <div class="article-share" id="share">
 
-  <div data-url="http://wangjunyan.github.io/2014/11/26/export-bitmap-in-heap-dump-file/" data-title="如何查看Android memory dump文件中的bitmap | Superfish&#39;s blog" data-tsina="null" class="share clearfix">
+  <div data-url="http://wangjunyan.github.io/2014/12/02/two-tips-of-eclipse-memory-analyzer/" data-title="MAT分析Android内存dump文件的两个tips | Superfish&#39;s blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
 </footer>   	       
 	</article>
 	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/12/02/export-android-bitmap-from-dump-file/" title="批量导出dump文件中的Bitmap">
+  <strong>上一篇：</strong><br/>
+  <span>
+  批量导出dump文件中的Bitmap</span>
+</a>
+</div>
+
+
+</nav>
+
 	
 <section id="comments" class="comment">
 	<div class="ds-thread"></div>
@@ -144,25 +143,25 @@ http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-v
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1"><span class="toc-number">1.</span> <span class="toc-text">1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1"><span class="toc-number">1.1.</span> <span class="toc-text">1.1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2"><span class="toc-number">1.2.</span> <span class="toc-text">1.2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2"><span class="toc-number">2.</span> <span class="toc-text">2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3"><span class="toc-number">3.</span> <span class="toc-text">3</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#查看Android_memory_dump文件中的Bitmap"><span class="toc-number">1.</span> <span class="toc-text">查看Android memory dump文件中的Bitmap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看dump文件中unreachable的对象"><span class="toc-number">2.</span> <span class="toc-text">查看dump文件中unreachable的对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
-			<li><a href="/categories/Android/" title="Android">Android<sup>1</sup></a></li>
+			<li><a href="/categories/Android/" title="Android">Android<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -170,21 +169,21 @@ http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-v
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
-			<li><a href="/tags/bitmap/" title="bitmap">bitmap<sup>1</sup></a></li>
+			<li><a href="/tags/bitmap/" title="bitmap">bitmap<sup>2</sup></a></li>
 		
-			<li><a href="/tags/memory/" title="memory">memory<sup>1</sup></a></li>
+			<li><a href="/tags/memory/" title="memory">memory<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Android/" title="Android">Android<sup>1</sup></a></li>
+			<li><a href="/tags/Android/" title="Android">Android<sup>2</sup></a></li>
 		
 		</ul>
 </div>
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -195,21 +194,18 @@ http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-v
 </div>
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
 </aside>
 </div>
     </div>
-    <footer><footer id="footer">
+    <footer><div class="alignleft">
   
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2014 superfish<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer></footer>
+  &copy; 2014 superfish
+  
+</div>
+<div class="clearfix"></div></footer>
     <script src="/js/jquery-2.0.3.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>
 <script src="/js/gallery.js"></script>
@@ -391,7 +387,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

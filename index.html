@@ -1,6 +1,6 @@
 
  <!DOCTYPE HTML>
-<html lang="zh-CN">
+<html >
 <head>
   <meta charset="UTF-8">
   
@@ -9,19 +9,17 @@
     
     <meta name="author" content="superfish">
     
-    <meta name="description" content="android linux java git">
-    
     
     
     
     <link rel="alternative" href="/atom.xml" title="Superfish&#39;s blog" type="application/atom+xml">
     
     
-    <link rel="icon" href="/img/favicon.ico">
+    <link rel="icon" href="/img/favicon.png">
     
     
-    <link rel="apple-touch-icon" href="/img/jacman.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon" href="/img/logo.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.png">
     
     <link rel="stylesheet" href="/css/style.css" type="text/css">
 
@@ -29,39 +27,25 @@
 
   <body>
     <header>
-      <div>
-		
-			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="Superfish&#39;s blog" title="Superfish&#39;s blog"/></a>
+      			<div id="textlogo">
+				<h1 class="site-name"><a rel="hover" class="hover" href="/" title="Superfish&#39;s blog">Superfish&#39;s blog</a></h1>
 			</div>
-			
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Superfish&#39;s blog">Superfish&#39;s blog</a></h1>
-				<h2 class="blog-motto">technical sharing</h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a rel="buzz" class="buzz" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
 					<ul>
 					 
-						<li><a href="/">Home</a></li>
+						<li><a rel="wobble-top" class="wobble-top" href="/">Home</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a rel="wobble-top" class="wobble-top" href="/archives">Archives</a></li>
 					
-						<li><a href="/about">About</a></li>
+						<li><a rel="wobble-top" class="wobble-top" href="/about">About</a></li>
 					
-					<li>
- 					
-					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
-						<label>Search</label>
-						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
-					</form>
-					
-					</li>
 				</ul>
 			</nav>			
 </div>
+
     </header>
     <div id="container">
       <div id="main">
@@ -72,29 +56,103 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/11/26/export-bitmap-in-heap-dump-file/" title="如何查看Android memory dump文件中的bitmap" itemprop="url">如何查看Android memory dump文件中的bitmap</a>
+      <a href="/2014/12/02/export-android-bitmap-from-dump-file/" title="批量导出dump文件中的Bitmap" itemprop="url">批量导出dump文件中的Bitmap</a>
   </h1>
   <p class="article-author">By
        
 		<a href="http://wangjunyan.github.io/about" title="superfish" target="_blank" itemprop="author">superfish</a>
 		
   <p class="article-time">
-    <time datetime="2014-11-26T08:23:13.000Z" itemprop="datePublished"> 发表于 11月 26 2014</time>
+    <time datetime="2014-12-02T10:32:42.000Z" itemprop="datePublished"> Published Dec 2 2014</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <h2 id="1">1</h2>
-<h3 id="1-1">1.1</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">echo</span></div></pre></td></tr></table></figure>
+        <p><a href="/2014/12/02/two-tips-of-eclipse-memory-analyzer/">上一篇文章</a>提到了查看memory dump文件中的Bitmap对象相应的图像，进一步我们可以批量的将dump文件中所有的Bitmap对象转化为png格式的图像文件。MAT不仅提供了一组Eclipse extension points，还提供了从dump文件读取数据的API。利用MAT提供的API，我们可以写一个Java程序批量导出dump文件中所有的Bitmap。</p>
+<h2 id="MAT扩展API接口">MAT扩展API接口</h2>
+<p>利用ISnapshot接口可以从heap dump中解析数据，ISnapshot代表了整个heap dump，提供了各种方法从中读取object和class，获取objects的大小等。我们可以通过SnapshotFactory获取ISnapshot实例。IObject接口代表一个Java对象，IClass，IInstance和IArray都继承了IObject。IClass代表class对象，可通过getObjectIds()方法获得该class的所有实例ID。IInstance代表非array对象，可通过resloveValue()方法获得成员变量的值。IArray代表array对象，分为IPrimitiveArray和IObjectArray，可分别通过getValueArray()方法获得primitive array值或getReferenceArray()方法获得address array。</p>
+<p>上述层次对象模型很直观并容易理解，但由于heap dump文件中有时会有非常多的对象，MAT不在ISnapshot实例中保存整个层次模型，而是为每个对象分配一个ID，并利用ID为索引从ISnapshot接口获得对象的具体信息，如class，size，referenced objects等。大都需要遍历对象的计算量大的工作都是通过对象ID而不是层次模型来实现，比如计算retained size，path to GC root等。只有当需要获得一个object的所有信息时，比如成员变量名称和变量值，才需要利用层次对象模型里的各种类。我们可以通过mapIdToAddress()和mapAddressToId()方式实现对象的ID和地址的互相转换。</p>
+<h2 id="android_bitmap导出工具实现">android bitmap导出工具实现</h2>
+<p>首先需要获得MAT源码的核心模块，可以从<a href="https://dev.eclipse.org/svnroot/tools/org.eclipse.mat/" target="_blank" rel="external">MAT SVN repository</a>下载全部源码并提取核心部分，或者直接参考<a href="https://bitbucket.org/ekabanov/mat" target="_blank" rel="external">ekabanov</a>或<a href="https://bitbucket.org/joebowbeer/andromat" target="_blank" rel="external">joebowbeer</a>项目，这两个项目已经将MAT源码核心模块抽取出来，只要修改自定义的部分就可以了。</p>
+<p>下面给出从dump文件批量导出bitmap的源码。基本思路如下：</p>
+<ul>
+<li>通过SnapshotFactory获得与dump文件对应的ISnapshot对象</li>
+<li>通过类名android.graphics.Bitmap获得IClass对象</li>
+<li>通过IClass的getObjectIds()方法获得所有Bitmap对象ID集合</li>
+<li>通过ISnapshot的getObject()方法获得与Bitmap对象ID对应的IObject对象</li>
+<li>通过IObject的resloveValue()方法获得Bitmap对象的mHeight，mWidth和mBuffer成员变量值</li>
+<li>调用Java的BufferedImage，ImageIO等API将获得的数据保存为png文件</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(String[] args) <span class="keyword">throws</span> Exception {</div><div class="line">    String arg = args[args.length - <span class="number">1</span>];</div><div class="line">    String fileName = arg;</div><div class="line">    IProgressListener listener = <span class="keyword">new</span> ConsoleProgressListener(System.out);</div><div class="line"></div><div class="line">    SnapshotFactory sf = <span class="keyword">new</span> SnapshotFactory();</div><div class="line">    ISnapshot snapshot = sf.openSnapshot(<span class="keyword">new</span> File(fileName),</div><div class="line">            <span class="keyword">new</span> HashMap&lt;String, String&gt;(), listener);</div><div class="line"></div><div class="line">    System.out.println(snapshot.getSnapshotInfo());</div><div class="line">    System.out.println();</div><div class="line"></div><div class="line">    String[] classNames = {</div><div class="line">        <span class="string">"android.graphics.Bitmap"</span></div><div class="line">    };</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (String name : classNames) {</div><div class="line">        Collection&lt;IClass&gt; classes = snapshot.getClassesByName(name, <span class="keyword">false</span>);</div><div class="line">        <span class="keyword">if</span> (classes == <span class="keyword">null</span> || classes.isEmpty()) {</div><div class="line">            System.out.println(String.format(</div><div class="line">                    <span class="string">"Cannot find class %s in heap dump"</span>, name));</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        }</div><div class="line">        <span class="keyword">assert</span> classes.size() == <span class="number">1</span>;</div><div class="line">        IClass clazz = classes.iterator().next();</div><div class="line">        <span class="keyword">int</span>[] objIds = clazz.getObjectIds();</div><div class="line">        <span class="keyword">long</span> minRetainedSize = snapshot.getMinRetainedSize(objIds, listener);</div><div class="line">        System.out.println(String.format(<span class="string">"%s instances = %d, retained size &gt;= %d"</span>, clazz.getName(), objIds.length, minRetainedSize));</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; objIds.length; i++)</div><div class="line">        {</div><div class="line">            IObject bmp = snapshot.getObject(objIds[i]);</div><div class="line">            String address = Long.toHexString(snapshot.mapIdToAddress(objIds[i]));</div><div class="line">            <span class="keyword">int</span> height = ((Integer)bmp.resolveValue(<span class="string">"mHeight"</span>)).intValue();</div><div class="line">            <span class="keyword">int</span> width = ((Integer)bmp.resolveValue(<span class="string">"mWidth"</span>)).intValue();</div><div class="line">            <span class="keyword">byte</span>[] buffer;</div><div class="line">            PrimitiveArrayImpl array = (PrimitiveArrayImpl)bmp.resolveValue(<span class="string">"mBuffer"</span>);</div><div class="line">            <span class="keyword">if</span>((height&lt;=<span class="number">0</span>) || (width&lt;=<span class="number">0</span>))</div><div class="line">            {</div><div class="line">                System.out.println(String.format(<span class="string">"Bitmap address=%s has bad height %d or width %d!"</span>, address, height, width));</div><div class="line">                <span class="keyword">continue</span>;</div><div class="line">            }</div><div class="line">            <span class="keyword">if</span>(array == <span class="keyword">null</span>)</div><div class="line">            {</div><div class="line">                System.out.println(String.format(<span class="string">"Bitmap address=%s has null buffer value!"</span>, address));</div><div class="line">                <span class="keyword">continue</span>;</div><div class="line">            }</div><div class="line">            buffer = (<span class="keyword">byte</span>[])array.getValueArray();</div><div class="line">            <span class="keyword">int</span>[] rgba = <span class="keyword">new</span> <span class="keyword">int</span>[width*height];</div><div class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; width*height; j++)</div><div class="line">            {</div><div class="line">                rgba[j] = ((buffer[j*<span class="number">4</span>]&lt;&lt;<span class="number">16</span>) | (buffer[j*<span class="number">4</span>+<span class="number">1</span>]&lt;&lt;<span class="number">8</span>) | (buffer[j*<span class="number">4</span>+<span class="number">2</span>]) | (buffer[j*<span class="number">4</span>+<span class="number">3</span>]&lt;&lt;<span class="number">24</span>));</div><div class="line">            }</div><div class="line">            BufferedImage image = <span class="keyword">new</span> BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);</div><div class="line">            image.setRGB(<span class="number">0</span>, <span class="number">0</span>, width, height, rgba, <span class="number">0</span>, width);</div><div class="line">            <span class="keyword">try</span>{</div><div class="line">                File outputfile = <span class="keyword">new</span> File(<span class="string">"bmp_"</span> + address + <span class="string">".png"</span>);</div><div class="line">                ImageIO.write(image, <span class="string">"png"</span>, outputfile);</div><div class="line">            }<span class="keyword">catch</span>(IOException e){</div><div class="line">                e.printStackTrace();</div><div class="line">            }</div><div class="line">            System.out.println(String.format(<span class="string">"id=%d, address=%s, height=%d, width=%d, size=%d"</span>, objIds[i], address, height, width, buffer.length));</div><div class="line">        }</div><div class="line">    }</div><div class="line">}</div></pre></td></tr></table></figure>
 
-<p> bash</p>
-<h3 id="1-2">1.2</h3>
-<h2 id="2">2</h2>
-<h2 id="3">3</h2>
-<p>参考</p>
-<p><a href="http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-view-bitmaps-from-memory-dump" target="_blank" rel="external">http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-view-bitmaps-from-memory-dump</a></p>
+<p>编译后得到<a href="/file/dump_android_bitmap.jar">dump_android_bitmap.jar</a>，通过如下命名即可将file.hprof文件中所有的bitmap对象导出为png格式图像文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -jar dump_android_bitmap.jar file.hprof</div></pre></td></tr></table></figure>
+
+<p>可以用Bitmap对象的地址作为文件名的一部分，以方便反查某一图像在MAT中对应的对象，并分析该对象的引用链。可以利用MAT提供的OQL（Object Query Language）查询dump文件中某个类的所有实例，或根据对象地址查询某个对象实例。</p>
+<ul>
+<li>查询所有mBuffer不为空的Bitmap对象</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from android.graphics.Bitmap where mBuffer!=null</div></pre></td></tr></table></figure>
+
+<ul>
+<li>查询特定对象地址对应的对象实例</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select distinct * from objects <span class="number">0</span>x41b00e90,<span class="number">0</span>x41ac0970</div></pre></td></tr></table></figure>
+
+<h2 id="参考">参考</h2>
+<p><a href="http://www.slideshare.net/AJohnson1/extending-eclipse-memory-analyzer" target="_blank" rel="external">http://www.slideshare.net/AJohnson1/extending-eclipse-memory-analyzer</a><br><a href="https://wiki.eclipse.org/MemoryAnalyzer/Reading_Data_from_Heap_Dumps" target="_blank" rel="external">https://wiki.eclipse.org/MemoryAnalyzer/Reading_Data_from_Heap_Dumps</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/12/02/two-tips-of-eclipse-memory-analyzer/" title="MAT分析Android内存dump文件的两个tips" itemprop="url">MAT分析Android内存dump文件的两个tips</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="http://wangjunyan.github.io/about" title="superfish" target="_blank" itemprop="author">superfish</a>
+		
+  <p class="article-time">
+    <time datetime="2014-12-02T10:11:46.000Z" itemprop="datePublished"> Published Dec 2 2014</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="查看Android_memory_dump文件中的Bitmap">查看Android memory dump文件中的Bitmap</h2>
+<p>在Android应用开发时一般使用Eclipse Memory Analyzer(MAT)分析堆内存占用情况，而Bitmap一般是占用内存最大的对象，所以有时我们希望知道MAT工具中显示的Bitmap对象对应哪个图像（本地资源文件或网络下载）。</p>
+<p>在MAT中选定要查看的Bitmap，如下图所示，在Inspector窗口查看Bitmap对象的Attributes，其中mBuffer为Bitmap像素数据，mHeight和mWidth为Bitmap的高度和宽度。右键mBuffer并在弹出的菜单中选择”Copy”-&gt;”Save Value To File”，将这个array的值保存到文件中，并用.data作为扩展名。<br><img src="/img/mat_bitmap.png" alt="MAT中的Bitmap"></p>
+<p>对于Linux用户，可以使用GIMP或ImageMagick工具将原始数据转换成png格式图像。方法如下：</p>
+<ul>
+<li>使用GIMP软件：打开GIMP，”File”-&gt;”Open”，选择刚才保存的.data文件，弹出”Load Image from Raw Data”对话框，设置合适的参数，设置”Image type”为“RGB Alpha”（大部分android resource是这种image type，若有其它格式，还要尝试其它的类型），设置width和height为mWidth和mHeight的值。这样GIMP界面就会显示出图片了。</li>
+<li>使用ImageMagick工具：将导出的.data文件扩展名改为.rgba</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ convert -size <span class="string">'width'</span>x<span class="string">'height'</span> -depth <span class="number">8</span> filename.rgba filename.png</div></pre></td></tr></table></figure>
+
+<p>对于Windows或MAC用户，可以使用Photoshop将原始数据转换成png格式图像。方法如下：</p>
+<ul>
+<li>将导出的.data文件扩展名改为.raw。“文件”-&gt;“打开”，选择文件格式“Camera Raw”，设置宽度和高度，将通道数设为4。这样Photoshop界面就会显示出图片了。</li>
+</ul>
+<h2 id="查看dump文件中unreachable的对象">查看dump文件中unreachable的对象</h2>
+<p>一个Java对象没有引用后，该对象占的堆内存不是立即被回收的，回收的时机是JAVA虚拟机的GC算法来决定的，所以memory dump时产成的文件中会包含unreachable的对象。一般来说，如果MAT工具中看到的live对象的总大小比dump文件大小小很多，我们有必要查看一下哪些unreachable的对象占用了内存。MAT默认情况下在分析dump文件时会将unreachable的对象剔除，可以通过打开如下设置让MAT分析dump文件时保留unreachable对象：”Window”-&gt;”Preference”-&gt;”General configration for memory analyzer”-&gt;”keep unreachable objects”。</p>
+<h2 id="参考">参考</h2>
+<p><a href="http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-view-bitmaps-from-memory-dump" target="_blank" rel="external">http://stackoverflow.com/questions/12709603/mat-eclipse-memory-analyzer-how-to-view-bitmaps-from-memory-dump</a><br><a href="https://wiki.eclipse.org/MemoryAnalyzer/FAQ#How_to_analyse_unreachable_objects" target="_blank" rel="external">https://wiki.eclipse.org/MemoryAnalyzer/FAQ#How_to_analyse_unreachable_objects</a></p>
 
         
         
@@ -111,18 +169,18 @@
 
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
-			<li><a href="/categories/Android/" title="Android">Android<sup>1</sup></a></li>
+			<li><a href="/categories/Android/" title="Android">Android<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -130,21 +188,21 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
-			<li><a href="/tags/bitmap/" title="bitmap">bitmap<sup>1</sup></a></li>
+			<li><a href="/tags/bitmap/" title="bitmap">bitmap<sup>2</sup></a></li>
 		
-			<li><a href="/tags/memory/" title="memory">memory<sup>1</sup></a></li>
+			<li><a href="/tags/memory/" title="memory">memory<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Android/" title="Android">Android<sup>1</sup></a></li>
+			<li><a href="/tags/Android/" title="Android">Android<sup>2</sup></a></li>
 		
 		</ul>
 </div>
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -155,21 +213,18 @@
 </div>
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
 </aside>
 </div>
     </div>
-    <footer><footer id="footer">
+    <footer><div class="alignleft">
   
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2014 superfish<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer></footer>
+  &copy; 2014 superfish
+  
+</div>
+<div class="clearfix"></div></footer>
     <script src="/js/jquery-2.0.3.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>
 <script src="/js/gallery.js"></script>
@@ -252,7 +307,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
